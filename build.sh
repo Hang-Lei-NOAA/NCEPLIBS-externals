@@ -4,8 +4,10 @@ set -eux
 cwd=`pwd`
 source ../../../machine-setup.sh > /dev/null 2>&1
 
-export LIBNAME=jasper
-export VER=v1.900.1
+export LIBNAME=netcdf
+export VER=v3.6.3
+export FC=ifort
+export cc=icc
 
 if [ $target = wcoss_cray ]; then
   export FCMP=ftn
@@ -25,23 +27,27 @@ fi
 cd ../../
 lwd=`pwd`
 cd $cwd
-LOCAL_EXTERN=${lwd}/ext_libs
+LOCAL_EXTERN=${lwd}/ext_libs/${LIBNAME}_${VER}
+mkdir -p $LOCAL_EXTERN
+rm -rf $LOCAL_EXTERN/*
 ###########################################################
-tar xf jasper-1.900.1.tar.gz
-cd jasper-1.900.1
+tar xf netcdf-3.6.3.tar.gz
+cd netcdf-3.6.3
 ###########################################################
-./configure --prefix=$cwd/jasper-1.900.1
-make
+./configure --prefix=$LOCAL_EXTERN --disable-shared --disable-docs-install
+make all
 make install
-###########################################################
-mkdir -p $LOCAL_EXTERN/${LIBNAME}_${VER}/incmod
-mv include/${LIBNAME}/* $LOCAL_EXTERN/${LIBNAME}_${VER}/incmod/.
-mkdir -p $LOCAL_EXTERN/${LIBNAME}_${VER}/libs
-mv lib/* $LOCAL_EXTERN/${LIBNAME}_${VER}/libs/.
-###########################################################
 cd $cwd
-rm -rf jasper-1.900.1
+rm -rf netcdf-3.6.3
 ###########################################################
+cp fake.f $LOCAL_EXTERN/lib/.
+cd $LOCAL_EXTERN/lib
+$FC -c  fake.f -o fake.o
+ar -ruv fake.a fake.o
+ln -s fake.a libnetcdff.a
+cd $cwd
+###########################################################
+
 #
 #     Create modulefile
 #
