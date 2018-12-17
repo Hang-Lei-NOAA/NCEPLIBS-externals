@@ -5,7 +5,7 @@ cwd=`pwd`
 source ../../../machine-setup.sh > /dev/null 2>&1
 
 export LIBNAME=crtm
-export VER=v2.0.6
+export VER=v2.2.3
 export FCMP=ifort
 export CCMP=icc
 export LIB_TEMP=${LIBNAME}_${VER}
@@ -26,23 +26,24 @@ fi
 
 ###########################################################
 # Repository site:
-# svn co https://svnemc.ncep.noaa.gov/projects/crtm/releases/REL-2.0.6_nofix
+# svn co https://svnemc.ncep.noaa.gov/projects/crtm/releases/REL-2.2.3
 ###########################################################
-tar xf REL-2.0.6_nofix.tar.gz
-cd REL-2.0.6_nofix
+tar xf REL-2.2.3.tar.gz
+cd REL-2.2.3
 ###########################################################
 rm -rf ../../../incmod/$LIB_TEMP ../../../libs/${LIBNAME}_${VER}/lib${LIB_TEMP}.a
-. configure/ifort.setup
+. config-setup/ifort.setup
+./configure --prefix=${PWD}
 make
 make install
 ###########################################################
  mkdir -p ../../../libs/${LIBNAME}_${VER}
- mv lib/libCRTM.a ../../../libs/${LIBNAME}_${VER}/lib${LIB_TEMP}.a
+ mv $LIB_TEMP/lib/libcrtm.a ../../../libs/${LIBNAME}_${VER}/lib${LIB_TEMP}.a
  mkdir -p ../../../incmod/$LIB_TEMP
- mv include/*.mod ../../../incmod/$LIB_TEMP
+ mv $LIB_TEMP/include/*.mod ../../../incmod/$LIB_TEMP
 ###########################################################
 cd $cwd
-rm -rf REL-2.0.6_nofix
+rm -rf REL-2.2.3
 ###########################################################
 #
 #     Create modulefile
