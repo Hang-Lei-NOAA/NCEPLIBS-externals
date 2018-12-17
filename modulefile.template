@@ -1,17 +1,15 @@
 #%Module######################################################################
 proc ModulesHelp { } {
-        puts stderr "Set environment veriables for esmf"
+        puts stderr "Set environment veriables for hdf5"
 }
 
 set sys         [uname sysname]
 set NCEPLIBS  _CWD_
-set LIBRDIR   $NCEPLIBS/ext_libs/esmf_v7.1.0r
+set LIBRDIR   $NCEPLIBS/ext_libs/hdf5_v1.8.18
 
-prepend-path PATH              $LIBRDIR/bin
-prepend-path LD_LIBRARY_PATH   $LIBRDIR/lib
+prepend-path PATH            $LIBRDIR/bin
+prepend-path LD_LIBRARY_PATH $LIBRDIR/lib
 
-setenv  ESMF_DIR     $LIBRDIR
-setenv  ESMFMKFILE   $LIBRDIR/lib/esmf.mk
-setenv  ESMF_LIB     $LIBRDIR/lib
-setenv  ESMF_MOD     $LIBRDIR/mod
-setenv  ESMF_INC     $LIBRDIR/include
+setenv HDF5               $NCEPLIBS/ext_libs/hdf5_v1.8.18
+setenv HDF5_INCLUDE_OPTS "-I${LIBRDIR}/include"
+setenv HDF5_LINK_OPTS    "-L${LIBRDIR}/lib -lhdf5_hl -lhdf5"
