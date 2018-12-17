@@ -4,8 +4,10 @@ set -eux
 cwd=`pwd`
 source ../../../machine-setup.sh > /dev/null 2>&1
 
-export LIBNAME=png
-export VER=v1.2.44
+export LIBNAME=xmlparse
+export VER=v2.0.0
+export FC=ifort
+export cc=icc
 
 if [ $target = wcoss_cray ]; then
   export FCMP=ftn
@@ -27,20 +29,19 @@ lwd=`pwd`
 cd $cwd
 LOCAL_EXTERN=${lwd}/ext_libs
 ###########################################################
-tar xf libpng-1.2.44.tar.gz
-cd libpng-1.2.44
+tar xf xmlparse_v2.0.0.tar.gz
+cd xmlparse_v2.0.0
 ###########################################################
-./configure --prefix=$cwd/libpng-1.2.44
+./configure --prefix=$LOCAL_EXTERN FCFLAGS="-O2"
+make all
 make install
-###########################################################
-mkdir -p $LOCAL_EXTERN/${LIBNAME}_${VER}/incmod
-cp pngconf.h  png.h $LOCAL_EXTERN/${LIBNAME}_${VER}/incmod/.
-mkdir -p $LOCAL_EXTERN/${LIBNAME}_${VER}/libs
-cp lib/lib* $LOCAL_EXTERN/${LIBNAME}_${VER}/libs/.
+mv $LOCAL_EXTERN/xmlparse-2.0.0 $LOCAL_EXTERN/${LIBNAME}_${VER}
 ###########################################################
 cd $cwd
-rm -rf libpng-1.2.44
+ls -l
+rm -rf xmlparse_v2.0.0
 ###########################################################
+
 #
 #     Create modulefile
 #
